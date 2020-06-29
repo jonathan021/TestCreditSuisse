@@ -1,0 +1,58 @@
+﻿@model IEnumerable<TestCreditSuisse.Web.Data.Entities.Dato>
+@{
+    ViewData["Title"] = "PorcAcumAnual";
+}
+
+    <h2>PorcAcumAnual </h2>
+
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(drawChart);
+
+        });
+
+
+    function drawChart() {
+        var bolla = '@Html.Raw(Json.Serialize(Model))';
+
+
+        var obj = JSON.parse(bolla);
+
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('string', 'fecha');
+        data.addColumn('number', 'dato');
+        //['Dinosaur', 'Length']
+
+        for (var i = 0; i < obj.length; i++) {
+            var num = (parseFloat(obj[i].dato));
+            data.addRow([obj[i].fecha, num]);
+        }
+
+
+        var columnChart = new google.visualization.AreaChart(document
+            .getElementById('chart_div'));
+
+        var columnChartOptions = {
+            title: "PorcAcumAnual",
+            width: 1000,
+            height: 400,
+            bar: { groupWidth: "20%" },
+        };
+
+        columnChart.draw(data, columnChartOptions);
+    }
+
+
+    </script>
+}
+<div class="row">
+    <div class="col-md-4">
+        <div id="chart_div" style="width: 900px; height: 500px;"></div>
+    </div>
+</div>
